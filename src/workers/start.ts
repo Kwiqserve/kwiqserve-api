@@ -4,3 +4,4 @@ import './email.worker';
 import './audit-log.worker';
 import './qr-code.worker';
 import './transfer.worker'
+import './push.worker'

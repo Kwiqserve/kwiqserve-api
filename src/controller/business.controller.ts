@@ -236,6 +236,28 @@ export async function updateBusinessHandler (req: Request, res: Response) {
     }
 }
 
+export async function updateCurrentBusinessHandler (req: Request, res: Response) {
+    try {
+        const subdomain = req.businessSubdomain;
+        const business = await findBusiness({subdomain: subdomain})
+
+        if(!business) {
+            return response.notFound(res, {message: 'Business not found'})
+        }
+
+        const update = req.body
+
+        if(!business) {
+            return response.notFound(res, {message: 'Business not found'})
+        }
+        const updatedBusiness = await findAndUpdateBusiness({ _id: business._id }, update, { new: true })
+        return response.ok(res, updatedBusiness)
+    } catch (error: any) {
+        log.error(error)
+        return response.error(res, error)
+    }
+}
+
 export const businessSetupCompletionHandler = async (req: Request, res: Response) => {
     try { 
         const userId = get(req, 'user._id')

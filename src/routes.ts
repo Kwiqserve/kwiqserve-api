@@ -7,7 +7,7 @@ import { requiresUser, validateRequest } from './middleware';
 import requiresAdministrator from './middleware/requiresAdministrator';
 import { changePasswordSchema, createUserSchema, createUserSessionSchema, getUserDetailsSchema } from './schema/user.schema';
 import { adminUpdateUserHandler, changePasswordHandler, confirmEmailHandler, createUserHandler, deleteUserHandler, getAllUsersHandler, getUserDetailsHandler, getUserProfileHandler, resendEmailConfirmationHandler, resetUserPassword, signupHandler, updateUserHandler } from './controller/user.controller';
-import { businessSetupCompletionHandler, createBusinessHandler, getBusinessDetailsHandler, getBusinessesHandler, getCurrentBusinessHandler, updateBusinessHandler, validateSubdomainHandler } from './controller/business.controller';
+import { businessSetupCompletionHandler, createBusinessHandler, getBusinessDetailsHandler, getBusinessesHandler, getCurrentBusinessHandler, updateBusinessHandler, updateCurrentBusinessHandler, validateSubdomainHandler } from './controller/business.controller';
 import { createUserSessionHandler, invalidateUserSessionHandler } from './controller/session.controller';
 import requiresPermissions from './middleware/requiresPermissions';
 import { rejectForbiddenUserFields } from './middleware/rejectForbiddenUserFields';
@@ -47,6 +47,7 @@ import { deductFromCartHandler, getCartsHandler, getClientCartHandler, sendToCar
 import { checkoutCartSchema, deductFromCartSchema, sendToCartSchema } from './schema/cart.schema';
 import { checkoutHandler } from './controller/checkout.controller';
 import { listBanksHandler, validateAccountNumberHandler } from './controller/utility.controller';
+import { createPushSubscriptionHandler, deletePushSubscriptionHandler, getPushSubscriptionHandler } from './controller/push-subscription.controller';
 
 export default function(app: Express) {
     app.get('/ping', (req: Request, res: Response) => res.sendStatus(200))
@@ -64,6 +65,21 @@ export default function(app: Express) {
     app.post("/utilities/validate-account",
         requiresUser,
         validateAccountNumberHandler
+    )
+
+    app.post("/push-notifications/subscribe",
+        requiresUser,
+        createPushSubscriptionHandler
+    )
+
+    app.get("/push-notifications/subscribe",
+        requiresUser,
+        getPushSubscriptionHandler
+    )
+
+    app.delete("/push-notifications/subscribe",
+        requiresUser,
+        deletePushSubscriptionHandler
     )
 
     app.post('/onboarding/signup', 
@@ -115,6 +131,12 @@ export default function(app: Express) {
 
     app.get('/business', 
         getCurrentBusinessHandler
+    )
+
+    app.patch('/business', 
+        requiresUser,
+        requiresPermissions(['business.*']),
+        updateCurrentBusinessHandler
     )
 
     app.get('/business/:businessId', 

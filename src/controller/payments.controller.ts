@@ -18,6 +18,8 @@ import { findAndUpdateCart, findCart } from "../service/cart.service";
 import { DocumentDefinition } from "mongoose";
 import { createPendingFee, findAndUpdatePendingFee } from "../service/pending-fee.service";
 import PendingFee from "../model/pending-fee.model";
+import { sendPushJob } from "../queues/push.queue";
+import { findTable } from "../service/table.service";
 
 export const receivePaymentHandler = async (req: Request, res: Response) => {
     try {
@@ -289,7 +291,6 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
                 if(newOrder) {
                     updateObject.order = newOrder._id
                 }
-
             }
 
             await findAndUpdateTransaction({ _id: transaction._id }, updateObject, { new: true })
@@ -303,6 +304,15 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
             // TODO: Send order receipt to the customer
 
             if (currentStore) {
+                // Send push notification job
+                const table = await findTable({_id: transaction.cart.table})
+                table && sendPushJob({
+                    business: currentStore._id,
+                    data: {
+                        title: "New Order Received",
+                        body: `your business has received a new order from ${customer.name} seated at ${table.name}`,
+                        url: `https://${req.businessSubdomain}.kwiqserve.com/business/orders/${transaction.order    }`
+                    }})
                 // Send real-time notification to business about new order
                 websocketService.sendToBusiness(
                     currentStore._id.toString(),
@@ -318,7 +328,7 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
                     }
                 );
 
-                // if the business prefers real tiime settlements, send a transfer
+                // if the business prefers real time settlements, send a transfer job
                 const businessSettings = await findBusinessSetting({business: currentStore._id}, 'receivingAccounts.account')
                 if (businessSettings && businessSettings.settlements?.preferred === 'instant') {
                     const transferAccount = businessSettings.receivingAccounts?.find(acc => acc.preferredForRemittance === true)
