@@ -20,8 +20,10 @@ export const createPushSubscriptionHandler = async (req: Request, res: Response)
     try {
         const subscription = req.body.subscription
         if (!subscription || !subscription.endpoint || !subscription.keys || !subscription.keys.p256dh || !subscription.keys.auth) {
-            return response.badRequest(res, { message: 'invalid subscription object' })
+            return response.badRequest(res, { message: 'invalid subscription object', objectReceived: req.body })
         };
+
+
         const userId = get(req, 'user._id')
         if (!userId) {
             return response.unAuthorized(res, { message: 'invalid session' })
