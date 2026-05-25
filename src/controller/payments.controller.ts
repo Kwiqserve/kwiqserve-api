@@ -280,6 +280,7 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
                     sourceMenu: transaction.meta!.sourceMenu,
                     business: transaction.business,
                     cart: transaction.cart._id,
+                    clientId: transaction.cart.clientId, 
                     table: transaction.cart.table,
                     paymentMethod: 'online',
                     customer: customer._id,

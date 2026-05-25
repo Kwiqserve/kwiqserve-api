@@ -7,6 +7,7 @@ import { BusinessDocument } from './business.model';
 import { TableDocument } from './table.model';
 import { CustomerDocument } from './customer.model';
 import { TransactionDocument } from './transaction.model';
+import { CartDocument } from './cart.model';
 // import { CartDocument } from './cart.model';
 
 export interface OrderItem {
@@ -21,8 +22,9 @@ export interface OrderDocument extends mongoose.Document {
     business: BusinessDocument['_id'];
     table: TableDocument['_id'];
     transaction?: TransactionDocument['_id']
+    clientId?: string
     orderRef: string;
-    // cart?: CartDocument['_id'];
+    cart?: CartDocument['_id'];
     alias: string;
     source: string;
     items: OrderItem[];
@@ -59,6 +61,10 @@ const OrderSchema = new mongoose.Schema(
             ref: 'Table', 
             required: true
         },
+        clientId: {
+            type: String,
+            required: true
+        },
         transaction: { // the transaction that paid for the order
             type: mongoose.Schema.Types.ObjectId, 
             ref: 'Transaction', 
@@ -69,10 +75,10 @@ const OrderSchema = new mongoose.Schema(
             unique: true,
             required: true
         },
-        // cart: {
-        //     type: mongoose.Schema.Types.ObjectId, 
-        //     ref: 'Cart'
-        // },
+        cart: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Cart'
+        },
         source: {
             type: String,
             enum: ['online', 'onsite'],

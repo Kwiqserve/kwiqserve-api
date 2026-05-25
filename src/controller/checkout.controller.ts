@@ -54,6 +54,7 @@ export const checkoutHandler = async (req: Request, res: Response) => {
             business: body.business,
             cart: cart._id,
             table: table._id,
+            clientId: cart.clientId,
             paymentMethod: body.paymentMethod,
             vat: orderAmounts.vat
         }

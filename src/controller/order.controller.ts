@@ -374,6 +374,42 @@ export const getOrdersHandler = async (req: Request, res: Response) => {
     }
 }
 
+
+export const getClientOrdersHandler = async (req: Request, res: Response) => {
+    try {
+        const queryObject: any = req.query;
+        const filters = parseOrderFilters(queryObject)
+        const resPerPage = +queryObject.perPage || 25; 
+        const page = +queryObject.page || 1; 
+        let expand = queryObject.expand || null
+
+        if(expand && expand.includes(',')) {
+            expand = expand.split(',')
+        }
+
+        let ordersQuery = {
+            ...filters, ...{clientId: req.params.clientId}
+        }
+
+        console.log('orders query -> ', ordersQuery)
+
+        const orders = await findOrders(ordersQuery, resPerPage, page, expand)
+        // return res.send(post)
+
+        const responseObject = {
+            page,
+            perPage: resPerPage,
+            total: orders.total,
+            orders: orders.orders
+        }
+
+        return response.ok(res, responseObject)        
+    } catch (error:any) {
+        return response.error(res, error)
+    }
+}
+
+
 export const exportOrdersToCsvHandler = async (req: Request, res: Response) => {
     try {
         const queryObject: any = req.query;
