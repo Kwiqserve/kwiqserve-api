@@ -5,6 +5,7 @@ import * as response from "../responses/index";
 
 const validate = (schema: AnySchema) => async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log('validating request:', req.body)
         await schema.validate({
             body: req.body,
             query: req.query,
