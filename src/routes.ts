@@ -48,6 +48,7 @@ import { checkoutCartSchema, deductFromCartSchema, sendToCartSchema } from './sc
 import { checkoutHandler } from './controller/checkout.controller';
 import { listBanksHandler, validateAccountNumberHandler } from './controller/utility.controller';
 import { createPushSubscriptionHandler, deletePushSubscriptionHandler, getPushSubscriptionHandler } from './controller/push-subscription.controller';
+import { createPushSubscriptionSchema } from './schema/push-subscription.schema';
 
 export default function(app: Express) {
     app.get('/ping', (req: Request, res: Response) => res.sendStatus(200))
@@ -69,6 +70,7 @@ export default function(app: Express) {
 
     app.post("/push-notifications/subscriptions",
         // requiresUser,
+        validateRequest(createPushSubscriptionSchema),
         createPushSubscriptionHandler
     )
 
