@@ -3,6 +3,7 @@ import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 import { PushSubscriptionDocument } from '../model/push-subscription.model';
 
 export async function createPushSubscription(userId: string, subscription: any) {
+    console.log('creating/updating push subscription for user', userId, 'with subscription', subscription)
     return PushSubscription.updateOne(
         {
             userId,
