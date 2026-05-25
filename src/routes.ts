@@ -67,17 +67,17 @@ export default function(app: Express) {
         validateAccountNumberHandler
     )
 
-    app.post("/push-notifications/subscribe",
-        requiresUser,
+    app.post("/push-notifications/subscriptions",
+        // requiresUser,
         createPushSubscriptionHandler
     )
 
-    app.get("/push-notifications/subscribe",
+    app.get("/push-notifications/subscriptions",
         requiresUser,
         getPushSubscriptionHandler
     )
 
-    app.delete("/push-notifications/subscribe",
+    app.delete("/push-notifications/subscriptions",
         requiresUser,
         deletePushSubscriptionHandler
     )
