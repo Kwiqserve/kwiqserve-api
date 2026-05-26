@@ -312,7 +312,7 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
                     data: {
                         title: "New Order Received",
                         body: `your business has received a new order from ${customer.name} seated at ${table.name}`,
-                            url: `https://${req.businessSubdomain}.kwiqserve.com/business/orders/${transaction.order._id    }`,
+                            url: `https://${req.businessSubdomain}.kwiqserve.com/business/orders/${updateObject.order || newOrder?._id}`,
                             tag: `order-${transaction?.order?._id || newOrder?._id}`,
                             renotify: true,
                             requireInteraction: true,
