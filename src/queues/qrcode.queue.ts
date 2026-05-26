@@ -9,14 +9,13 @@ const qrCodeQueue = new Bull('qrCodeQueue', {
 });
 
 // Function to add a slack message job to the queue
-export const sendQrCodeJob = (messageData: { 
+export const sendQrCodeJob = async (messageData: { 
     tableId: string
     data: {
         tableUrl: string
-        // businessFrontUrl: string
     } 
 }) => {
-    qrCodeQueue.add(messageData, {
+  return qrCodeQueue.add(messageData, {
         attempts: 5, // retry 3 times if job fails
         backoff: 10000, // wait 5 seconds before retrying
         removeOnComplete: 1000, // Keep the last 1000 completed jobs

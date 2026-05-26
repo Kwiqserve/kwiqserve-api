@@ -57,7 +57,7 @@ export async function createTableHandler (req: Request, res: Response) {
     
         const table = await createTable({ ...body, ...{createdBy: userId, slug: slugify(body.name), business: req.currentBusiness?._id} })
         // const tableQRCode = 
-        sendQrCodeJob({
+        await sendQrCodeJob({
             tableId: table._id.toString(),
             data: {
                 tableUrl: `https://${req.businessSubdomain}.${process.env.FRONTEND_URL}/tables/${table._id}`
@@ -98,7 +98,7 @@ export async function createMultipleTablesHandler (req: Request, res: Response) 
 
             const table = await createTable(tableData)
             // const tableQRCode = 
-            sendQrCodeJob({
+            await sendQrCodeJob({
                 tableId: table._id.toString(),
                 data: {
                     tableUrl: `https://${req.businessSubdomain}.${process.env.FRONTEND_URL}/tables/${table._id}`

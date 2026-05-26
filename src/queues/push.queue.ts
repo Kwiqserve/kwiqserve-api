@@ -4,7 +4,7 @@ import { BusinessDocument } from '../model/business.model';
 import { UserDocument } from '../model/user.model';
 
 // Initialize the queue with Redis
-const pushQueue = new Bull('qrCodeQueue', {
+const pushQueue = new Bull('pushQueue', {
   redis: {
     host: '127.0.0.1',
     port: 6379,
