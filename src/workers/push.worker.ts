@@ -10,7 +10,15 @@ initPush();
 pushQueue.process(async (job) => {
   try {
     const businessId = job.data.business?.toString?.();
-    const payload = JSON.stringify(job.data.data || {});
+    const notificationPayload = {
+      ...(job.data.data || {}),
+      tag: job.data.data?.tag || `business-order-${businessId}`,
+      renotify: job.data.data?.renotify ?? true,
+      requireInteraction: job.data.data?.requireInteraction ?? true,
+      vibrate: job.data.data?.vibrate || [200, 100, 200, 100, 300],
+      timestamp: job.data.data?.timestamp || Date.now(),
+    };
+    const payload = JSON.stringify(notificationPayload);
 
     if (!businessId || !job.data.data) {
       log.warn(`push job ${job.id} missing required fields`);

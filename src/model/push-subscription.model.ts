@@ -54,6 +54,14 @@ const PushSubscriptionSchema = new Schema({
     }
 }, { timestamps: true });
 
+PushSubscriptionSchema.index(
+    { userId: 1, 'subscription.endpoint': 1 },
+    { unique: true }
+);
+
+PushSubscriptionSchema.index({ userId: 1 });
+PushSubscriptionSchema.index({ businesses: 1 });
+
 const PushSubscription = mongoose.model<PushSubscriptionDocument>('PushSubscription', PushSubscriptionSchema);
 
 export default PushSubscription;

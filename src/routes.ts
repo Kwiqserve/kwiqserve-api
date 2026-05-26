@@ -69,7 +69,7 @@ export default function(app: Express) {
     )
 
     app.post("/push-notifications/subscriptions",
-        // requiresUser,
+        requiresUser,
         validateRequest(createPushSubscriptionSchema),
         createPushSubscriptionHandler
     )

@@ -2,18 +2,27 @@ import PushSubscription from '../model/push-subscription.model';
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 import { PushSubscriptionDocument } from '../model/push-subscription.model';
 
-export async function createPushSubscription(userId: string, subscription: any) {
+export async function createPushSubscription(
+    userId: string,
+    subscription: any,
+    businessId?: string,
+    device?: { browser?: string; os?: string }
+) {
     console.log('creating/updating push subscription for user', userId, 'with subscription', subscription)
-    return PushSubscription.updateOne(
+    return PushSubscription.findOneAndUpdate(
         {
             userId,
             "subscription.endpoint": subscription.endpoint
         },
         {
-            $set: { subscription },
+            $set: {
+                subscription,
+                ...(device ? { device } : {})
+            },
+            ...(businessId ? { $addToSet: { businesses: businessId } } : {}),
             $setOnInsert: { userId }
         },
-        { upsert: true }
+        { upsert: true, new: true, setDefaultsOnInsert: true }
     )
 }
 

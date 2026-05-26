@@ -158,7 +158,12 @@ export const createOrderHandler = async (req: Request, res: Response) => {
                 data: {
                     title: 'New Order Received',
                     body: `Your business has received a new order from ${customer.name} seated at ${table.name}`,
-                    url: `https://${req.businessSubdomain}.${process.env.FRONTEND_URL}/business/orders/${order._id}`
+                    url: `https://${req.businessSubdomain}.${process.env.FRONTEND_URL}/business/orders/${order._id}`,
+                    tag: `order-${order._id}`,
+                    renotify: true,
+                    requireInteraction: true,
+                    vibrate: [200, 100, 200, 100, 300],
+                    timestamp: Date.now()
                 }
             })
         }

@@ -312,7 +312,12 @@ export const verifyTransactionHandler = async (req: Request, res: Response) => {
                     data: {
                         title: "New Order Received",
                         body: `your business has received a new order from ${customer.name} seated at ${table.name}`,
-                        url: `https://${req.businessSubdomain}.kwiqserve.com/business/orders/${transaction.order    }`
+                            url: `https://${req.businessSubdomain}.kwiqserve.com/business/orders/${transaction.order._id    }`,
+                            tag: `order-${transaction?.order?._id || newOrder?._id}`,
+                            renotify: true,
+                            requireInteraction: true,
+                            vibrate: [200, 100, 200, 100, 300],
+                            timestamp: Date.now()
                     }})
                 // Send real-time notification to business about new order
                 websocketService.sendToBusiness(

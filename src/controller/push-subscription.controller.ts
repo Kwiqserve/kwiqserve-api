@@ -19,6 +19,7 @@ const buildSubscriptionFilter = (req: Request, userId: string) => {
 export const createPushSubscriptionHandler = async (req: Request, res: Response) => {
     try {
         const subscription = req.body.subscription
+        const device = req.body.device
         if (!subscription || !subscription.endpoint || !subscription.keys || !subscription.keys.p256dh || !subscription.keys.auth) {
             return response.badRequest(res, { message: 'invalid subscription object', objectReceived: req.body })
         };
@@ -29,7 +30,8 @@ export const createPushSubscriptionHandler = async (req: Request, res: Response)
             return response.unAuthorized(res, { message: 'invalid session' })
         }
 
-        const newSubscription = await createPushSubscription(userId, subscription)
+        const currentBusinessId = req.currentBusiness?._id?.toString?.();
+        const newSubscription = await createPushSubscription(userId, subscription, currentBusinessId, device)
       
         return response.created(res, {message: 'subscribed successfully', subscription: newSubscription})
         

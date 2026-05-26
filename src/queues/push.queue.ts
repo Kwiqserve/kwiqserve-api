@@ -19,6 +19,15 @@ export const sendPushJob = async (messageData: {
         title: string
         body: string
         url: string
+        icon?: string
+        badge?: string
+        image?: string
+        tag?: string
+        requireInteraction?: boolean
+        renotify?: boolean
+        silent?: boolean
+        vibrate?: number[]
+        timestamp?: number
         // businessFrontUrl: string
     } 
 }) => {
