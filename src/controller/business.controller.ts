@@ -59,50 +59,6 @@ export const createBusinessHandler = async (req: Request, res: Response) => {
             })
         }
 
-        // sendQrCodeJob({
-        //     businessId: business._id.toString(),
-        //     data: {
-        //         businessFrontUrl: `https://${business.subdomain}.scanserve.cloud/businessfront`,
-        //         priceCardUrl: `https://${business.subdomain}.scanserve.cloud/prices`
-        //     }
-        // })
-
-        // if(subscriptionPlan.price > 0) {
-        //     const transactionReference = generateCode(18, false)
-        //     const transactionProcessor = 'paystack'
-    
-        //     // CREATE TRANSACTION FIRST
-        //     const newTransaction = await createTransaction({
-        //         transactionReference,
-        //         createdBy: creator?._id,
-        //         subscriptionPlan: subscriptionPlan._id,
-        //         amount: subscriptionPlan?.price,
-        //         processor: transactionProcessor,
-        //         channel: 'web',
-        //         business: business._id
-        //     })
-    
-        //     const input = {
-        //         reference: newTransaction.transactionReference,
-        //         amount: newTransaction.amount, //order!.amount,
-        //         email: creator!.email,
-        //         callbackUrl: req.body.callbackUrl
-        //     }
-    
-        //     const purchaseObject = await initiateTransaction(input) as { data: any }
-        //     console.log('payment init data -> ', purchaseObject)
-        //     return response.created(res, purchaseObject.data.data)
-        // } else {
-        //     // Create subscription for the business
-        //     await createSubscription({
-        //         business: business._id,
-        //         subscriptionPlan: input.subscriptionPlan,
-        //         expiryDate: addDays(30, new Date()),
-        //         active: true
-        //     })
-        //     return response.created(res, business)
-        // }
-
     } catch (error: any) {
         log.error(error)
         return response.error(res, error)
@@ -184,40 +140,6 @@ export const getBusinessesHandler = async (req: Request, res: Response) => {
         return response.error(res, error)
     }
 }
-
-// export const generateBusinessQrCodesHandler = async (req: Request, res: Response) => {
-//     try {
-//         const queryObject: any = req.query;
-//         // const filters = parseOrderFilters(queryObject)
-//         const resPerPage = +queryObject.perPage || 25; 
-//         const page = +queryObject.page || 1; 
-//         let expand = queryObject.expand || null
-
-//         const businesss = await findBusinesses({}, resPerPage, page, expand)
-
-//         businesss.businesses.forEach(business => {
-//             sendQrCodeJob({
-//                 businessId: business._id.toString(),
-//                 data: {
-//                     businessFrontUrl: `https://${business.subdomain}.scanserve.cloud/businessfront`,
-//                     priceCardUrl: `https://${business.subdomain}.scanserve.cloud/prices`
-//                 }
-//             })
-//         })
-
-//         const responseObject = {
-//             page,
-//             perPage: resPerPage,
-//             total: businesss.total,
-//             businesss: businesss.businesses
-//         }
-
-//         return response.ok(res, responseObject)
-//     } catch (error: any) {
-//         log.error(error)
-//         return response.error(res, error)
-//     }
-// }
 
 export async function updateBusinessHandler (req: Request, res: Response) {
     try {

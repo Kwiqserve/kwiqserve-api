@@ -24,6 +24,13 @@ export async function findPushSubscription(
     return PushSubscription.findOne(query, {}, options)
 }
 
+export async function findPushSubscriptions(
+    query: FilterQuery<PushSubscriptionDocument>,
+    options: QueryOptions = { lean: true }
+) {
+    return PushSubscription.find(query, {}, options)
+}
+
 export async function findAndUpdatePushSubscription(
     query: FilterQuery<PushSubscriptionDocument>,
     update: UpdateQuery<PushSubscriptionDocument>,

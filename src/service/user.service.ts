@@ -42,6 +42,13 @@ export async function findUser(
     // return User.findOne(query).populate(['affiliateMarkup', 'wallet']).select('-bvnValidationData').lean().populate(expand);
 }
 
+export async function findUsers(
+    query: FilterQuery<UserDocument>,
+    expand?: string | string[]
+) {
+    return User.find(query).lean().populate(expand);
+}
+
 export async function findAllUsers(
     query: FilterQuery<UserDocument>,
     perPage: number,

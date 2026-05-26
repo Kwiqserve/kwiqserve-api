@@ -12,7 +12,7 @@ const pushQueue = new Bull('pushQueue', {
 });
 
 // Function to add a slack message job to the queue
-export const sendPushJob = (messageData: { 
+export const sendPushJob = async (messageData: { 
     business: BusinessDocument['_id']
     user?: UserDocument['_id']
     data: {
@@ -22,7 +22,7 @@ export const sendPushJob = (messageData: {
         // businessFrontUrl: string
     } 
 }) => {
-    pushQueue.add(messageData, {
+    return pushQueue.add(messageData, {
         attempts: 3, // retry 3 times if job fails
         backoff: {
             delay: 5000,

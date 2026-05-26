@@ -14,6 +14,7 @@ import { websocketService } from "../service/websocket.service";
 import { createCustomer, findCustomer } from "../service/customer.service";
 import { findTable } from "../service/table.service";
 import { findBusiness } from "../service/business.service";
+import { sendPushJob } from "../queues/push.queue";
 
 const parseOrderFilters = (query: any) => {
     const { minDateCreated, maxDateCreated, alias, status, store, source, table, minTotal, maxTotal, paymentStatus, paymentMethod } = query; 
@@ -151,6 +152,17 @@ export const createOrderHandler = async (req: Request, res: Response) => {
             }
         })
 
+        if (req.currentBusiness) {
+            await sendPushJob({
+                business: req.currentBusiness._id,
+                data: {
+                    title: 'New Order Received',
+                    body: `Your business has received a new order from ${customer.name} seated at ${table.name}`,
+                    url: `https://${req.businessSubdomain}.${process.env.FRONTEND_URL}/business/orders/${order._id}`
+                }
+            })
+        }
+
         
         // Send real-time notification to business about new order
         if (req.currentBusiness && order.paymentMethod === 'cash_on_delivery' || order.paymentMethod === 'pos_on_delivery') {
@@ -168,6 +180,8 @@ export const createOrderHandler = async (req: Request, res: Response) => {
                 }
             );
         }
+
+        
         
         return response.created(res, order)
     } catch (error:any) {
